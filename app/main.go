@@ -27,8 +27,7 @@ func main() {
 
 	for {
 
-		buffer := make([]byte, 1024)
-
+		var buffer []byte
 		bytesRead, err := conn.Read(buffer)
 		if err == nil {
 			fmt.Printf("Successfull read %d bytes, buffer content %q", bytesRead,buffer)
