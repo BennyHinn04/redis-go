@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-
-	"github.com/codecrafters-io/redis-starter-go/resp"
 )
 
 func main() {
@@ -26,7 +24,7 @@ func main() {
 	}
 	response := "+PONG\r\n"
 	conn.Write([]byte(response))
-	
+
 
 	/*
 	buffer := make([]byte, 1024)
