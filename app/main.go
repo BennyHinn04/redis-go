@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"net"
-	"strings"
 	"os"
 	"redis-go/resp"
+	"redis-go/handlers"
 )
 
 func main() {
@@ -27,20 +27,18 @@ func main() {
 		}
 		go handleConnection(conn)
 	}
-	
 
-	
 }
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
 	for {
-		buffer := make([]byte,1024)
+		buffer := make([]byte, 1024)
 		bytesRead, err := conn.Read(buffer)
 		if err == nil {
-			fmt.Printf("Successfull read %d bytes, buffer content %q", bytesRead,buffer)
+			fmt.Printf("Successfull read %d bytes", bytesRead)
 		} else {
 			fmt.Printf("Error occured : %q", err.Error())
-			break;
+			break
 		}
 
 		commands, bytesConsumed, err := resp.ParseArray(buffer)
@@ -51,12 +49,11 @@ func handleConnection(conn net.Conn) {
 
 		fmt.Printf("Successfully consumed %d", bytesConsumed)
 
-		command := strings.ToUpper(commands[0])
-
-		switch command {
-		case "PING":
-			response := "+PONG\r\n"
+		if len(commands) > 0 {
+			args := commands[1:]
+			response := handlers.Execute(commands[0],args)
 			conn.Write([]byte(response))
 		}
+		
 	}
 }
