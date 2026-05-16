@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"net"
+	"strings"
 	"os"
+	"redis-go/resp"
 )
 
 func main() {
@@ -22,31 +24,35 @@ func main() {
 		fmt.Println("Error accepting connection: ", err.Error())
 		os.Exit(1)
 	}
-	response := "+PONG\r\n"
-	conn.Write([]byte(response))
 
+	for {
 
-	/*
-	buffer := make([]byte, 1024)
+		buffer := make([]byte, 1024)
 
-	bytesRead, err := conn.Read(buffer)
-	if err == nil {
-		fmt.Printf("Successfull read %d bytes, buffer content %q", bytesRead,buffer)
-	} else {
-		fmt.Printf("Error occured : %q", err.Error())
+		bytesRead, err := conn.Read(buffer)
+		if err == nil {
+			fmt.Printf("Successfull read %d bytes, buffer content %q", bytesRead,buffer)
+		} else {
+			fmt.Printf("Error occured : %q", err.Error())
+			break;
+		}
+
+		commands, bytesConsumed, err := resp.ParseArray(buffer)
+
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
+		fmt.Println("Successfully consumed %d", bytesConsumed)
+
+		command := strings.ToUpper(commands[0])
+
+		switch command {
+		case "PING":
+			response := "+PONG\r\n"
+			conn.Write([]byte(response))
+		}
 	}
-
-	command, bytesConsumed, err := resp.ParseSimpleString(buffer)
-
-	if err == nil {
-		fmt.Printf("Successfully parsed the command %q of %d bytes", command, bytesConsumed)
-		response := "+PONG\r\n"
-		conn.Write([]byte(response))
-	}
-
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	*/
+	
 
 }
