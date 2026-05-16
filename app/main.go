@@ -29,7 +29,7 @@ func main() {
 
 	bytesRead, err := conn.Read(buffer)
 	if err == nil {
-		fmt.Printf("Successfull read %d bytes", bytesRead)
+		fmt.Printf("Successfull read %d bytes, buffer content %q", bytesRead,buffer)
 	} else {
 		fmt.Printf("Error occured : %q", err.Error())
 	}

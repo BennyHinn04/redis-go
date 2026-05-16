@@ -6,7 +6,7 @@ import (
 )
 
 func ParseSimpleString(buffer []byte) (string,int,error) {
-
+	
 	if len(buffer) == 0 {
 		return "", 0, errors.New("buffer is empty")
 	}
