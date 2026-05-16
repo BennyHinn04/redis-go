@@ -24,7 +24,11 @@ func main() {
 		fmt.Println("Error accepting connection: ", err.Error())
 		os.Exit(1)
 	}
+	response := "+PONG\r\n"
+	conn.Write([]byte(response))
+	
 
+	/*
 	buffer := make([]byte, 1024)
 
 	bytesRead, err := conn.Read(buffer)
@@ -45,5 +49,6 @@ func main() {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+	*/
 
 }
