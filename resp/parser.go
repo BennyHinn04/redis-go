@@ -82,7 +82,7 @@ func ParseBulkString(inputBytes []byte) (string, int, error) {
 		return "", 0, errors.New("Incomplete Command")
 	}
 
-	if inputBytes[payloadEndPos+1] != '\r' || inputBytes[payloadEndPos+2] != '\n' {
+	if inputBytes[payloadEndPos] != '\r' || inputBytes[payloadEndPos+1] != '\n' {
 		return "", 0, errors.New("ERR Protocol error: expected CRLF after bulk string")
 	}
 
