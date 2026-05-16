@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"net"
 	"os"
-)
 
-// Ensures gofmt doesn't remove the "net" and "os" imports in stage 1 (feel free to remove this!)
-var _ = net.Listen
-var _ = os.Exit
+	"github.com/codecrafters-io/redis-starter-go/resp"
+)
 
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -21,9 +19,31 @@ func main() {
 		fmt.Println("Failed to bind to port 6379")
 		os.Exit(1)
 	}
-	_, err = l.Accept()
+	conn, err := l.Accept()
 	if err != nil {
-	 	fmt.Println("Error accepting connection: ", err.Error())
-	 	os.Exit(1)
+		fmt.Println("Error accepting connection: ", err.Error())
+		os.Exit(1)
 	}
+
+	buffer := make([]byte, 1024)
+
+	bytesRead, err := conn.Read(buffer)
+	if err == nil {
+		fmt.Printf("Successfull read %d bytes", bytesRead)
+	} else {
+		fmt.Printf("Error occured : %q", err.Error())
+	}
+
+	command, bytesConsumed, err := resp.ParseSimpleString(buffer)
+
+	if err == nil {
+		fmt.Printf("Successfully parsed the command %q of %d bytes", command, bytesConsumed)
+		response := "+PONG\r\n"
+		conn.Write([]byte(response))
+	}
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
 }
