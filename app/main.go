@@ -27,7 +27,7 @@ func main() {
 
 	for {
 
-		var buffer []byte
+		buffer := make([]byte,1024)
 		bytesRead, err := conn.Read(buffer)
 		if err == nil {
 			fmt.Printf("Successfull read %d bytes, buffer content %q", bytesRead,buffer)
@@ -42,7 +42,7 @@ func main() {
 			fmt.Println(err.Error())
 		}
 
-		fmt.Println("Successfully consumed %d", bytesConsumed)
+		fmt.Printf("Successfully consumed %d", bytesConsumed)
 
 		command := strings.ToUpper(commands[0])
 
