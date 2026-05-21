@@ -9,6 +9,8 @@ type Command func(args []string) string
 var registry = map[string]Command{
 	"PING":pingHandler,
 	"ECHO":echoHandler,
+	"SET":setCommand,
+	"GET":getCommand,
 }
 
 func Execute(command string,args []string) (string) {
