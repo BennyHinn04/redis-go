@@ -1,6 +1,9 @@
 package handlers
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func getCommand(args []string) string {
 	if len(args) < 1 {
@@ -8,15 +11,24 @@ func getCommand(args []string) string {
 	}
 	
 	key := args[0]
-	mu.RLock()
 
-	value,exists := store[key]
+	mu.Lock()
+	defer mu.Unlock()
 
-	mu.RUnlock()
-
+	storeElement,exists := store[key]
 	if !exists {
 		return "$-1/r/n"
 	}
-	return fmt.Sprintf("$%d\r\n%s\r\n", len(value), value)
+
+	curEntry := storeElement.Value.(entry)
+	if curEntry.expiresAt != nil && time.Now().After(*curEntry.expiresAt) {
+		delete(store,curEntry.key)
+		evictionList.Remove(storeElement)
+		return "$-1\r\n"
+	}
+
+	evictionList.MoveToFront(storeElement)
+
+	return fmt.Sprintf("$%d\r\n%s\r\n", len(curEntry.value), curEntry.value)
 
 }
