@@ -11,6 +11,7 @@ var registry = map[string]Command{
 	"ECHO":echoHandler,
 	"SET":setCommand,
 	"GET":getCommand,
+	"RPUSH":rpushCommand,
 }
 
 func Execute(command string,args []string) (string) {

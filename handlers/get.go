@@ -29,6 +29,6 @@ func getCommand(args []string) string {
 
 	evictionList.MoveToFront(storeElement)
 
-	return fmt.Sprintf("$%d\r\n%s\r\n", len(curEntry.value), curEntry.value)
+	return fmt.Sprintf("$%d\r\n%s\r\n", len(curEntry.value.(string)), curEntry.value)
 
 }
