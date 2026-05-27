@@ -8,7 +8,7 @@ import (
 
 type entry struct {
 	key       string
-	value     string
+	value     any
 	expiresAt *time.Time
 }
 
