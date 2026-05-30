@@ -10,7 +10,6 @@ func rpushCommand(args []string) string {
 	}
 
 	key := args[0]
-	
 	valuesToPush := args[1:] 
 	
 	var listData []string
@@ -22,7 +21,6 @@ func rpushCommand(args []string) string {
 		
 		entryElement := element.Value.(entry)
 		existingList, ok := entryElement.value.([]string)
-
 		
 		if !ok {
 			return "-WRONGTYPE Operation against a key holding the wrong kind of value\r\n"
@@ -31,9 +29,7 @@ func rpushCommand(args []string) string {
 		listData = append(existingList, valuesToPush...)
 		entryElement.value = listData
 		element.Value = entryElement 
-
 		evictionList.MoveToFront(element)
-		
 	} else {
 		listData = valuesToPush
 
