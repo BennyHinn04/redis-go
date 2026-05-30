@@ -13,6 +13,7 @@ var registry = map[string]Command{
 	"GET":getCommand,
 	"RPUSH":rpushCommand,
 	"LRANGE":lrangeCommand,
+	"LPUSH": lpushCommand,
 }
 
 func Execute(command string,args []string) (string) {
