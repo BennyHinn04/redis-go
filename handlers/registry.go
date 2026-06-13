@@ -16,6 +16,7 @@ var registry = map[string]Command{
 	"LPUSH": lpushCommand,
 	"LLEN": llenCommand,
 	"LPOP": lpopCommand,
+	"BLPOP": blpopCommand,
 }
 
 func Execute(command string,args []string) (string) {
