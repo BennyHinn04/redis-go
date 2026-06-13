@@ -21,9 +21,9 @@ func blpopCommand(args []string) string {
 	key := args[0]
 	timeout := args[1]
 
-	timeoutSec, err := strconv.Atoi(timeout)
-	if err != nil {
-		return "-ERR timeout is not an integer or out of range\r\n"
+	timeoutFloat, err := strconv.ParseFloat(timeout, 64)
+	if err != nil || timeoutFloat < 0 {
+		return "-ERR timeout is negative or not a valid float\r\n"
 	}
 
 	mu.Lock()
