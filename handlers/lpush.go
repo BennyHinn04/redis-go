@@ -18,6 +18,7 @@ func lpushCommand(args []string) string {
 	}
 
 	var listData []string
+	var finalLength int
 	mu.Lock()
 	defer mu.Unlock()
 
@@ -30,7 +31,7 @@ func lpushCommand(args []string) string {
 		}
 
 		listData = append(reversed, existingList...)
-		
+		finalLength = len(listData)
 		for len(entryElement.waiters) > 0 && len(listData) > 0{
 			oldestClientChan := entryElement.waiters[0]
 			entryElement.waiters = entryElement.waiters[1:]
@@ -68,5 +69,5 @@ func lpushCommand(args []string) string {
 
 
 
-	return fmt.Sprintf(":%d\r\n", len(listData))
+	return fmt.Sprintf(":%d\r\n", finalLength)
 }
