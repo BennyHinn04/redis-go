@@ -21,6 +21,11 @@ func blpopCommand(args []string) string {
 	key := args[0]
 	timeout := args[1]
 
+	timeoutSec, err := strconv.Atoi(timeout)
+	if err != nil {
+		return "-ERR timeout is not an integer or out of range\r\n"
+	}
+
 	mu.Lock()
 
 	element,exists := store[key]
@@ -37,7 +42,7 @@ func blpopCommand(args []string) string {
 			
 			mu.Unlock()
 
-			return fmt.Sprintf("$%d\r\n%s\r\n", len(poppedValue), poppedValue)
+			return fmt.Sprintf("*2\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n", len(key), key, len(poppedValue), poppedValue)
 		} 
 
 	} else {
@@ -58,19 +63,15 @@ func blpopCommand(args []string) string {
 
 	mu.Unlock()
 	// Goroutine sleeps until the newChannel has a value
-	timeoutSec,err := strconv.Atoi(timeout)
-	if err != nil {
-		return "-ERR timeout is not an integer or out of range\r\n"
-	}
 	if timeoutSec == 0 {
 		poppedValue := <-newChannel
-		return fmt.Sprintf("$%d\r\n%s\r\n", len(poppedValue), poppedValue)
+		return fmt.Sprintf("*2\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n", len(key), key, len(poppedValue), poppedValue)
 	} else {
 		select {
 		case poppedValue := <-newChannel:
-			return fmt.Sprintf("$%d\r\n%s\r\n", len(poppedValue), poppedValue)
+			return fmt.Sprintf("*2\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n", len(key), key, len(poppedValue), poppedValue)
 		case <-time.After(time.Duration(timeoutSec) * time.Second):
-			return "$-1\r\n"
+			return "*-1\r\n"
 		}
 	}
 
