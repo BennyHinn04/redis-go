@@ -59,6 +59,9 @@ func blpopCommand(args []string) string {
 	mu.Unlock()
 	// Goroutine sleeps until the newChannel has a value
 	timeoutSec,err := strconv.Atoi(timeout)
+	if err != nil {
+		return "-ERR timeout is not an integer or out of range\r\n"
+	}
 	if timeoutSec == 0 {
 		poppedValue := <-newChannel
 		return fmt.Sprintf("$%d\r\n%s\r\n", len(poppedValue), poppedValue)
