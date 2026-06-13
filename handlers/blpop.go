@@ -44,7 +44,7 @@ func blpopCommand(args []string) string {
 		newEntry := entry{
 			key	: key,
 			value : []string{},
-			waiters: []chan string{}
+			waiters: []chan string{},
 		}
 		store[key] = evictionList.PushFront(newEntry)
 	}
