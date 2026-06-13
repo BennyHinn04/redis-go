@@ -27,9 +27,8 @@ func blpopCommand(args []string) string {
 
 	if exists {
 		curEntry := element.Value.(entry)
-
-		listData,ok := curEntry.value
-		if len(listData) > 0 {
+		listData,ok := curEntry.value.([]string)
+		if ok && len(listData) > 0 {
 			poppedValue := listData[0]
 			curEntry.value = listData[1:]
 			element.Value = curEntry
