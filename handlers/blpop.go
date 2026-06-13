@@ -63,14 +63,14 @@ func blpopCommand(args []string) string {
 
 	mu.Unlock()
 	// Goroutine sleeps until the newChannel has a value
-	if timeoutSec == 0 {
+	if timeoutFloat == 0 {
 		poppedValue := <-newChannel
 		return fmt.Sprintf("*2\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n", len(key), key, len(poppedValue), poppedValue)
 	} else {
 		select {
 		case poppedValue := <-newChannel:
 			return fmt.Sprintf("*2\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n", len(key), key, len(poppedValue), poppedValue)
-		case <-time.After(time.Duration(timeoutSec) * time.Second):
+		case <-time.After(time.Duration(timeoutFloat) * time.Second):
 			return "*-1\r\n"
 		}
 	}
