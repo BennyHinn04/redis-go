@@ -47,7 +47,7 @@ func lpushCommand(args []string) string {
 		evictionList.MoveToFront(element)
 	} else {
 		listData = reversed
-
+		finalLength = len(listData)
 		newEntry := entry{
 			key:       key,
 			value:     listData,

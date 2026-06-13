@@ -44,7 +44,7 @@ func rpushCommand(args []string) string {
 		evictionList.MoveToFront(element)
 	} else {
 		listData = valuesToPush
-
+		finalLength = len(listData)
 		newEntry := entry{
 			key:       key,
 			value:     listData,
