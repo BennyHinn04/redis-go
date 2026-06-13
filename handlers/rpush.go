@@ -28,6 +28,17 @@ func rpushCommand(args []string) string {
 
 		listData = append(existingList, valuesToPush...)
 		entryElement.value = listData
+
+		for len(entryElement.waiters) > 0 && len(sendList) > 0{
+			oldestClientChan := entryElement.waiters[0]
+			entryElement.waiters = entryElement.waiters[1:]
+
+			element.Value = entryElement
+			dataValue := listData[0]
+			listData = listData[1:]
+			oldestClientChan <- dataValue
+		}
+		
 		element.Value = entryElement 
 		evictionList.MoveToFront(element)
 	} else {

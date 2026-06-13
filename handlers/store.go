@@ -10,6 +10,7 @@ type entry struct {
 	key       string
 	value     any
 	expiresAt *time.Time
+	waiters  []chan string
 }
 
 const maxCapacity = 10000
