@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+	"math"
 )
 
 func blpopCommand(args []string) string {
@@ -70,7 +71,7 @@ func blpopCommand(args []string) string {
 		select {
 		case poppedValue := <-newChannel:
 			return fmt.Sprintf("*2\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n", len(key), key, len(poppedValue), poppedValue)
-		case <-time.After(time.Duration(timeoutFloat) * time.Second):
+		case <-time.After(time.Duration(timeoutFloat) * float64(time.Second)):
 			return "*-1\r\n"
 		}
 	}
