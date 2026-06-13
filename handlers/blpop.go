@@ -21,12 +21,14 @@ func blpopCommand(args []string) string {
 
 	key := args[0]
 	timeout := args[1]
-	waitDuration := time.Duration(math.Round(timeoutFloat * float64(time.Second)))
+	
 
 	timeoutFloat, err := strconv.ParseFloat(timeout, 64)
 	if err != nil || timeoutFloat < 0 {
 		return "-ERR timeout is negative or not a valid float\r\n"
 	}
+
+	waitDuration := time.Duration(math.Round(timeoutFloat * float64(time.Second)))
 
 	mu.Lock()
 
