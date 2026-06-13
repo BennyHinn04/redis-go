@@ -21,6 +21,7 @@ func blpopCommand(args []string) string {
 
 	key := args[0]
 	timeout := args[1]
+	waitDuration := time.Duration(math.Round(timeoutFloat * float64(time.Second)))
 
 	timeoutFloat, err := strconv.ParseFloat(timeout, 64)
 	if err != nil || timeoutFloat < 0 {
@@ -71,7 +72,7 @@ func blpopCommand(args []string) string {
 		select {
 		case poppedValue := <-newChannel:
 			return fmt.Sprintf("*2\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n", len(key), key, len(poppedValue), poppedValue)
-		case <-time.After(time.Duration(timeoutFloat) * float64(time.Second)):
+		case <-time.After(waitDuration):
 			return "*-1\r\n"
 		}
 	}
