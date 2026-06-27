@@ -79,5 +79,4 @@ func blpopCommand(args []string) string {
 		}
 	}
 
-
 }
